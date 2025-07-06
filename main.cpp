@@ -170,11 +170,20 @@ private:
 
         // GStreamer pipeline
         GstElement* pipeline = gst_parse_launch(
+           ("filesrc location=\"" + filepath + "\" ! decodebin name=dec "
+           "dec. ! queue ! videoconvert ! video/x-raw,format=RGB ! appsink name=videosink "
+           "dec. ! queue ! audioconvert ! audioresample ! autoaudiosink").c_str(),
+            nullptr);
+
+        GstElement* sink = gst_bin_get_by_name(GST_BIN(pipeline), "videosink");
+        gst_element_set_state(pipeline, GST_STATE_PLAYING);
+
+/*        GstElement* pipeline = gst_parse_launch(
             ("filesrc location=\"" + filepath + "\" ! decodebin ! videoconvert ! video/x-raw,format=RGB ! appsink name=sink").c_str(),
             nullptr);
 
         GstElement* sink = gst_bin_get_by_name(GST_BIN(pipeline), "sink");
-        gst_element_set_state(pipeline, GST_STATE_PLAYING);
+        gst_element_set_state(pipeline, GST_STATE_PLAYING);*/
 
         GLuint texid = 0;
         bool is_fullscreen = true;
